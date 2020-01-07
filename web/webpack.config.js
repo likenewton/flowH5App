@@ -71,7 +71,7 @@ module.exports = {
     path: resolve(__dirname, 'dist'),
     filename: 'js/[name].js',
     chunkFilename: "js/[name].chunk.js",
-    publicPath: '/'
+    publicPath: process.env.NODE_ENV === 'production' ? '/flowH5App/' : '/'
   },
   optimization: {
     splitChunks: {

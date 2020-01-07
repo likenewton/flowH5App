@@ -22,7 +22,7 @@ class Certification {
       rapid2: null, // 身份证姓名
       rapid3: null, // 身份证编号
       rapid4: null, // 手机号码
-      vedioMaxSize: 10 * 1024 * 1024,
+      vedioMaxSize: 5 * 1024 * 1024,
       imageMaxSize: 5 * 1024 * 1024,
       Timer: null,
       card_type: 5, // 等于2只能视频认证
