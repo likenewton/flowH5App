@@ -64,6 +64,8 @@ function getPlugins(viewPath) {
   return pluginMap
 }
 
+console.log('++++++++++++++++++++++', process.env.NODE_ENV)
+
 module.exports = {
   // devtool: 'source-map',
   entry: getEntries('./app/pages'),
