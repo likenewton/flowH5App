@@ -1,0 +1,58 @@
+{
+  "id": "1472165",
+  "name": "cardH5",
+  "font_family": "iconfont",
+  "css_prefix_text": "iconfont-",
+  "description": "用于流量卡详情H5页面",
+  "glyphs": [
+    {
+      "icon_id": "839009",
+      "name": "上展开",
+      "font_class": "shangzhankai",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "839010",
+      "name": "下展开",
+      "font_class": "xiazhankai",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "839011",
+      "name": "左展开",
+      "font_class": "zuozhankai",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "839012",
+      "name": "右展开",
+      "font_class": "youzhankai",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "3670126",
+      "name": "扫码",
+      "font_class": "tubiaolunkuo-",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "6844458",
+      "name": "关闭",
+      "font_class": "guanbi",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "6966909",
+      "name": "加",
+      "font_class": "jia",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    }
+  ]
+}

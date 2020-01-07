@@ -1,0 +1,92 @@
+@import '../../base/style/border';
+
+.recharge-card {
+  border-radius: 8px;
+  border: 1px solid #ebeef5;
+  overflow: hidden;
+  margin-bottom: 10px;
+  transition: .3s;
+
+  &:hover {
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  }
+
+  .top {
+    cursor: pointer;
+
+    .left {
+      width: 28%;
+      padding: 10px 15px;
+      text-align: center;
+      background: #FB6411;
+      background-image: linear-gradient(to right, #FEA357, #FB6411);
+
+      .combo-amount {
+        color: #fff;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 20px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #fff;
+      }
+
+      .combo-type {
+        color: #fff;
+        font-size: 12px;
+        padding-top: 5px;
+      }
+    }
+
+    .right {
+      position: relative;
+      padding: 6px 15px;
+      height: 67px;
+      border-bottom: 2px solid #FE7144;
+
+      .flow-calc {}
+
+      .flow-price {
+        margin-top: 10px;
+        color: #FF8000;
+
+        .clearbymouth {
+          margin-right: 30px;
+          font-size: 15px;
+        }
+
+        .price {
+          font-weight: bold;
+          font-size: 15px;
+        }
+      }
+
+      .recommended {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+
+      * {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .content {
+    padding: 10px;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .recom {
+    .left {
+      background-image: linear-gradient(to right, #FE7144, #EE4140);
+    }
+
+    .right .recommended {
+      display: inline-block;
+    }
+  }
+
+}

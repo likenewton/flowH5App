@@ -1,0 +1,30 @@
+@import '../../base/style/border';
+
+.rapid-input {
+  display: none;
+  padding: 0.15rem 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 555;
+  border: 1px solid #ebeef5;
+  border-radius: 3px;
+  line-height: 0.6rem;
+  box-shadow: 0 2px 0.12rem 0 rgba(0,0,0,.1);
+  background: #fff;
+
+  .rapid-item {
+    padding: 0 0.15rem;
+    cursor: pointer;
+  }
+
+  .rapid-item:hover {
+    background: #f5f7fa;
+  }
+
+  * {
+    font-size: 0.24rem;
+    color: #666;
+  }
+}
