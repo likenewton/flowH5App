@@ -223,15 +223,12 @@ class Certification {
 
     // 重新验证
     $('.content-three .again-btn').click(() => {
-      // location.href = location.href
       Crumbs.render({
         dom: '.js-crumbs',
         step: 1
       })
-      // $('input').val('')
       $('.content-one').show()
       $('.content-three').hide()
-      // this.fn.initImgs()
     })
 
     // 返回首页
@@ -349,7 +346,7 @@ class Certification {
       done: ((res) => {
         _tip.hide()
         if (res.data.status == 0 || res.data.status == 4) this.fn.showResult('audit')
-        else if (res.data.status == 2 || res.data.status == 5) this.fn.showResult('hadsuccess')
+        else if (res.data.status == 2 || res.data.status == 5) this.fn.showResult('success')
         else if (res.data.status == 1) {
           this.fn.showResult('error')
           $('.result.err .result-text-sub').text(res.data.message || '未知错误！')
