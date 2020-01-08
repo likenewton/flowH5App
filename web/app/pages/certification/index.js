@@ -228,10 +228,10 @@ class Certification {
         dom: '.js-crumbs',
         step: 1
       })
-      $('input').val('')
+      // $('input').val('')
       $('.content-one').show()
       $('.content-three').hide()
-      this.fn.initImgs()
+      // this.fn.initImgs()
     })
 
     // 返回首页
@@ -265,12 +265,7 @@ class Certification {
 
   // 文件上传
   upLoadPic(file, target, cb) {
-    if ($('#input_iccid').val().trim().length === 0) {
-      cpopup.alert({
-        body: '请填写iccid！'
-      })
-      return
-    }
+    if ($('#input_iccid').val().trim().length === 0) return cpopup.alert({ body: '请填写iccid！' })
     let formData = new FormData();
     formData.append('file', file)
     formData.append('iccid', $('#input_iccid').val())
@@ -319,13 +314,10 @@ class Certification {
 
   // 获取唇语信息
   getLivegetfour() {
-    console.log(_axios.ajaxAd.getLivegetfour)
     _axios.send({
       method: 'get',
       url: _axios.ajaxAd.getLivegetfour,
-      params: {
-        iccid: $('#input_iccid').val(),
-      },
+      params: { iccid: $('#input_iccid').val() },
       done: ((res) => {
         $('.validate-text-wrapper .code').text(res.data.code)
         this.data.livegetfour = res.data.rspcode
@@ -356,19 +348,11 @@ class Certification {
       },
       done: ((res) => {
         _tip.hide()
-        if (res.data.error) {
-          cpopup.alert({
-            body: res.data.message || '未知错误！'
-          })
-          if (this.data.model == 'video') this.getLivegetfour()
-          return
-        }
-        if (res.data.status == 0 || res.data.status == 4) {
-          this.fn.showResult('audit')
-        } else if (res.data.info.status == 2 || res.data.info.status == 5) {
-          this.fn.showResult('hadsuccess')
-        } else if (res.data.info.status == 1) {
+        if (res.data.status == 0 || res.data.status == 4) this.fn.showResult('audit')
+        else if (res.data.status == 2 || res.data.status == 5) this.fn.showResult('hadsuccess')
+        else if (res.data.status == 1) {
           this.fn.showResult('error')
+          $('.result.err .result-text-sub').text(res.data.message || '未知错误！')
         }
       }),
       fail: () => {
@@ -405,52 +389,30 @@ class Certification {
           $('.tabs').removeClass('one').addClass('two')
           $('.tabs-content').removeClass('one').addClass('two')
           $('.content-two .nav-wrapper').removeClass('one').addClass('two')
-          this.getLivegetfour()
+          this.getLivegetfour() // 获取唇语
         }
       },
       // 表单验证
       formValidator() {
         let msg = ''
-        if ($('#input_iccid').val().trim().length === 0) {
-          msg = '卡ICCID不能为空！'
-        } else if (!Units.isName($('#input_name').val())) {
-          msg = '身份证姓名不符合规范！'
-        } else if (!Units.isCardNo($('#input_code').val())) {
-          msg = '身份证编号不符合规范！'
-        } else if (!Units.isPhoneNumber($('#input_phone').val())) {
-          msg = '手机号码不符合规范！'
-        } else if (!this.data.cdi_img1) {
-          msg = '请上传身份证正面！'
-        } else if (!this.data.cdi_img2) {
-          msg = '请上传身份证背面！'
-        }
-        if (msg) {
-          cpopup.alert({
-            body: msg
-          })
-        } else {
-          return true
-        }
+        if ($('#input_iccid').val().trim().length === 0) msg = '卡ICCID不能为空！'
+        else if (!Units.isName($('#input_name').val())) msg = '身份证姓名不符合规范！'
+        else if (!Units.isCardNo($('#input_code').val())) msg = '身份证编号不符合规范！'
+        else if (!Units.isPhoneNumber($('#input_phone').val())) msg = '手机号码不符合规范！'
+        else if (!this.data.cdi_img1) msg = '请上传身份证正面！'
+        else if (!this.data.cdi_img2) msg = '请上传身份证背面！'
+        if (msg) cpopup.alert({ body: msg })
+        else return true
       },
       // 验证上传图片的格式
       imgValide(file) {
-        let types = ['image/jpeg', 'image/jpg', 'image/png'];
-        if (!types.includes(file.type)) {
-          cpopup.alert({
-            body: '文件类型不正确，只能上传png、jpg、jpeg图片！',
-          })
-        }
-        return types.includes(file.type)
+        if (['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) return true
+        cpopup.alert({ body: '文件类型不正确，只能上传png、jpg、jpeg图片！' })
       },
       // 验证上传视频格式
       videoValide(file) {
-        if (file.type.indexOf('video') > -1) {
-          return true
-        } else {
-          cpopup.alert({
-            body: '文件类型不正确！',
-          })
-        }
+        if (file.type.indexOf('video') > -1) return true
+        cpopup.alert({ body: '文件类型不正确！' })
       },
       /* param status
        * success 实名认证成功 suc
@@ -491,12 +453,10 @@ class Certification {
               ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
             }
           }
-        };
-
+        }
         // 判断上传文件的方向
         EXIF.getData(file, function() {
           let exifData = EXIF.pretty(this);
-
           if (exifData) {
             // exifData.Orientation === 6 需要旋转
             if (exifData.Orientation === 3) {
@@ -511,9 +471,9 @@ class Certification {
           } else {
             // 不是直接拍摄的
           }
-        });
+        })
       },
-      //
+      // 暂时不用
       checkSmsCanSend() {
         clearInterval(this.data.Timer)
         let $smsBtn = $('.send-code')
