@@ -13,11 +13,11 @@ class AXIOS {
     // ajax请求地址
     this.ajaxAd = {
       // 实名认证
-      getInfo: '/fc/api/h5/realname/info',
-      uploadPic: '/fc/api/h5/realname/upload',
-      sendSms: '/fc/api/h5/realname/sendSms', // 暂时不用
-      realname: '/fc/api/h5/realname', // 实名提交
-      getLivegetfour: '/fc/api/h5/realname/livegetfour', // 获取唇语
+      getInfo: '/flowh5/api/realname/info',
+      uploadPic: '/flowh5/api/realname/upload',
+      sendSms: '/flowh5/api/realname/sendSms', // 暂时不用
+      realname: '/flowh5/api/realname', // 实名提交
+      getLivegetfour: '/flowh5/api/realname/livegetfour', // 获取唇语
     }
   }
 
