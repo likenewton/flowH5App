@@ -33,6 +33,17 @@ public class FlowCenterCoreService {
     private final static String SYNC_UNICOM_DATA_URL = "/core/card/syncUnicomData?iccid={iccid}";
     private final static String CALCULATE_ASSIGN_CARD_URL = "/core/card/calculateAssignCard?iccid={iccid}&usedTotal={usedTotal}&usedMonth={usedMonth}&isUnicom={isUnicom}&openCard={openCard}&currentMonth={currentMonth}";
 
+    /**
+     * 流量卡信息获取接口URL
+     */
+    private final static String CARDINFO_URL = "/core/cards?iccid={iccid}";
+
+    /**
+     * 流量卡信息更新URL
+     */
+    private final static String CARDINFO_UPDATE_URL = "/core/cards";
+
+
     public FlowCenterCoreService(RestTemplate coreServiceRestTemplate, String host){
         this.coreServiceRestTemplate = coreServiceRestTemplate;
         this.host = host;
@@ -218,6 +229,61 @@ public class FlowCenterCoreService {
         }
     }
 
+    /**
+     * 通过ICCID获取流量卡信息
+     * @param iccid 卡ICCID
+     * @return CcGprsCard 对象
+     */
+    public CcGprsCard info(String iccid){
+
+        if(StringUtils.isEmpty(iccid)){
+            return null;
+        }
+
+        Map<String, String> uriParams = new HashMap<>(1);
+        uriParams.put("iccid", iccid);
+        String result = this.coreServiceRestTemplate.getForObject(this.host + CARDINFO_URL, String.class, uriParams);
+        JSONObject data = JSONObject.parseObject(result);
+        if(isSuccess(data)){
+            return data.getObject(DATA, CcGprsCard.class);
+        }else{
+            log.warn("[info][获取流量卡信息失败]params={},result={}", iccid, result);
+            return null;
+        }
+    }
+
+    public boolean updateCardInfo(CcGprsCard card){
+
+        if(card == null || card.getCard_id() == null){
+            return false;
+        }
+
+        String result = null;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
+        HttpEntity<String> httpEntity = new HttpEntity<>(JSONObject.toJSONString(card), headers);
+
+        try {
+            result = this.coreServiceRestTemplate.postForObject(this.host + CARDINFO_UPDATE_URL, httpEntity, String.class);
+        } catch (RestClientException e) {
+            log.warn("[updateCardInfo][异常]params={},exception={}", JSONObject.toJSONString(card), ExceptionUtils.getStackTrace(e));
+            throw new CoreServiceException("update card info exception, msg:"+e.getMessage());
+        }
+
+        JSONObject data = JSONObject.parseObject(result);
+        if(isSuccess(data)){
+            return true;
+        }else{
+            log.warn("[updateCardInfo][更新失败]params={},result={}", JSONObject.toJSONString(card), result);
+            return false;
+        }
+
+    }
+
+
+
     private static final String CODE = "code";
     /*private static final String ERROR_CODE = "errorCode";*/
     private static final String DATA = "data";
@@ -236,5 +302,6 @@ public class FlowCenterCoreService {
 
         return StringUtils.equals(SUCESS_CODE, data.getString(CODE));
     }
+
 
 }

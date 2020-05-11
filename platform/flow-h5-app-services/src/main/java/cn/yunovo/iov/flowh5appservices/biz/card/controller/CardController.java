@@ -1,7 +1,13 @@
 package cn.yunovo.iov.flowh5appservices.biz.card.controller;
 
 import cn.yunovo.iov.flowh5appservices.framework.configuation.CardInfoH5ConfigProperties;
+import cn.yunovo.iov.flowh5appservices.manage.CcGprsCard;
+import cn.yunovo.iov.flowh5appservices.manage.FlowCenterCoreService;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,12 +19,16 @@ import org.springframework.web.servlet.view.RedirectView;
  * @since 1.0
  */
 @Controller
-public class CardControllerr {
+@Slf4j
+public class CardController {
 
     private CardInfoH5ConfigProperties cardInfoH5ConfigProperties;
+    private FlowCenterCoreService flowCenterCoreService;
 
-    public CardControllerr(CardInfoH5ConfigProperties properties){
+    public CardController(CardInfoH5ConfigProperties properties,
+                          FlowCenterCoreService flowCenterCoreService){
         this.cardInfoH5ConfigProperties = properties;
+        this.flowCenterCoreService = flowCenterCoreService;
     }
 
     /**
@@ -31,7 +41,7 @@ public class CardControllerr {
     public RedirectView index(String iccid){
 
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(cardInfoH5ConfigProperties.getIndexPageUrl());
+        redirectView.setUrl(cardInfoH5ConfigProperties.getIndexPageUrl() + (StringUtils.isNotEmpty(iccid) ? "?iccid="+iccid : ""));
         return redirectView;
     }
 
@@ -48,10 +58,51 @@ public class CardControllerr {
         String url = cardInfoH5ConfigProperties.getCardInfoPageUrl();
         RedirectView redirectView = new RedirectView();
         if(StringUtils.isBlank(iccid)){
-            url = cardInfoH5ConfigProperties.getIndexPageUrl();
-            redirectView.setUrl(url);
-            return redirectView;
+            return this.index(iccid);
         }
+
+        CcGprsCard card = flowCenterCoreService.info(iccid);
+        if(card == null){
+            return this.index(iccid);
+        }
+
+        /**
+         * 判断是否需要机卡分离解锁
+         */
+        if(unlock != null && BooleanUtils.toBooleanObject(unlock)){
+            if(card.getOrg_id() == 76 && card.getUnicom_stop() != null && BooleanUtils.toBooleanObject(card.getUnicom_stop()) && card.getCard_type() >= 2 && card.getMax_unused() > 0){
+
+                boolean flag = true;
+
+                try {
+                    flag = flowCenterCoreService.onoffCard(card.getCard_iccid(), 0, "selfop");
+                } catch (Exception e) {
+                    log.error("[info]params={iccid:{},from:{},unlock:{}},exception={}", iccid, from, unlock, ExceptionUtils.getStackTrace(e));
+                    flag = false;
+                }
+
+                if(flag){
+                    card.setUnicom_stop((short)0);
+                    try {
+                        flowCenterCoreService.updateCardInfo(card);
+                    } catch (Exception e) {
+                        log.error("[info]params={iccid:{},from:{},unlock:{},card:{}},exception={}", iccid, from, unlock, JSONObject.toJSONString(card), ExceptionUtils.getStackTrace(e));
+                    }
+                }
+            }
+        }
+
+/*        if ($this->request->get_var('unlock', 'i'))
+        {
+            if ($vrs['card_info']['org_id'] == 76 && $vrs['card_info']['unicom_stop'] && $vrs['card_info']['card_type'] >= 2 && $vrs['card_info']['max_unused'] > 0)
+            {
+                if (modules_funs::cardOnoff($this, $vrs['card_info'], 0, 0, 'selfop'))
+                {
+                    $vrs['card_info']['unicom_stop'] = 0;
+                    modules_funs::updateCard($this, $vrs['card_info']);
+                }
+            }
+        }*/
 
         redirectView.setUrl(url + "?queryIccid="+iccid);
         return redirectView;
@@ -71,6 +122,11 @@ public class CardControllerr {
             url = cardInfoH5ConfigProperties.getIndexPageUrl();
             redirectView.setUrl(url);
             return redirectView;
+        }
+
+        CcGprsCard card = flowCenterCoreService.info(iccid);
+        if(card == null){
+            return this.index(iccid);
         }
 
         redirectView.setUrl(url + "?" + iccid);
@@ -96,6 +152,12 @@ public class CardControllerr {
             redirectView.setUrl(url);
             return redirectView;
         }
+
+        CcGprsCard card = flowCenterCoreService.info(iccid);
+        if(card == null){
+            return this.index(iccid);
+        }
+
         String fromFlag = StringUtils.defaultIfBlank(from, "yzzx");
         if(StringUtils.isBlank(packid)){
             return this.toTopupPack(redirectView, iccid, fromFlag);
@@ -104,6 +166,8 @@ public class CardControllerr {
         }
 
     }
+
+
 
     private RedirectView toTopupPack(RedirectView redirectView, String iccid, String from){
 
