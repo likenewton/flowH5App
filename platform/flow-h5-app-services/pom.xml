@@ -53,14 +53,7 @@
         <dependency>
             <groupId>cn.yunovo.iov.boot</groupId>
             <artifactId>iov-boot-starter-nacos</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.alibaba.cloud</groupId>
-                    <artifactId>
-                        spring-cloud-starter-alibaba-nacos-discovery
-                    </artifactId>
-                </exclusion>
-            </exclusions>
+
         </dependency>
 
         <dependency>

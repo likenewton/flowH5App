@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
  * @since 1.0
  */
 @Configuration
-@EnableDiscoveryClient
 @Slf4j
 public class FcCoreServiceConfiguration {
 
