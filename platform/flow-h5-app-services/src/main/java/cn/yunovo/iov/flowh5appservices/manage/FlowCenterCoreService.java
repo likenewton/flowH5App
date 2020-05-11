@@ -255,6 +255,7 @@ public class FlowCenterCoreService {
     public boolean updateCardInfo(CcGprsCard card){
 
         if(card == null || card.getCard_id() == null){
+            log.warn("[updateCardInfo][数据有误]params={}", JSONObject.toJSONString(card));
             return false;
         }
 

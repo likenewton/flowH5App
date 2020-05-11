@@ -66,9 +66,7 @@ public class CardController {
             return this.index(iccid);
         }
 
-        /**
-         * 判断是否需要机卡分离解锁
-         */
+        //判断是否需要机卡分离解锁
         if(unlock != null && BooleanUtils.toBooleanObject(unlock)){
             if(card.getOrg_id() == 76 && card.getUnicom_stop() != null && BooleanUtils.toBooleanObject(card.getUnicom_stop()) && card.getCard_type() >= 2 && card.getMax_unused() > 0){
 
@@ -92,17 +90,6 @@ public class CardController {
             }
         }
 
-/*        if ($this->request->get_var('unlock', 'i'))
-        {
-            if ($vrs['card_info']['org_id'] == 76 && $vrs['card_info']['unicom_stop'] && $vrs['card_info']['card_type'] >= 2 && $vrs['card_info']['max_unused'] > 0)
-            {
-                if (modules_funs::cardOnoff($this, $vrs['card_info'], 0, 0, 'selfop'))
-                {
-                    $vrs['card_info']['unicom_stop'] = 0;
-                    modules_funs::updateCard($this, $vrs['card_info']);
-                }
-            }
-        }*/
 
         redirectView.setUrl(url + "?queryIccid="+iccid);
         return redirectView;
